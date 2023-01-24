@@ -1,6 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const Leaders = require('../models/')
+const Leaders = require('../models/Leaders')
 const leaderRouter = express.Router()
 leaderRouter.use(bodyParser.json())
 leaderRouter.route('/')
