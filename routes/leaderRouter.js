@@ -1,16 +1,20 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const Leaders = require('../models/Leaders')
+const Leaders = require('../models/leaders')
 const leaderRouter = express.Router()
 leaderRouter.use(bodyParser.json())
 leaderRouter.route('/')
     .get((req, res, next) => {
         Leaders.find({}).then((leaders) => {
             res.statusCode = 200;
-            res.setHeader("Content-Type")
+            res.setHeader('Content-Type', "application/json")
             res.json(leaders)
-        }, (err) => next(err)).catch((err) => next(err))
+        }, (err) => next(err)).catch((err) => {
+            console.log(err)
+            next(err)
+        })
     }).post((req, res, next) => {
+        console.log(req.body);
         Leaders.create(
             req.body
         ).then((leader) => {
@@ -20,7 +24,10 @@ leaderRouter.route('/')
             res.json(leader)
         }, err => next(err))
             .catch((err) =>
-                next(err))
+            {
+                console.log(err)
+                next(err)
+            })
         // res.end("Will add the leader: " + req.body.name + " with details: " + req.body.description)
     }).put((req, res, next) => {
         res.statusCode = 403

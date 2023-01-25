@@ -7,20 +7,22 @@ promoRouter.route('/')
     .get((req, res, next) => {
         Promos.find({}).then((promotions) => {
             res.statusCode = 200;
-            res.setHeader("Content-Type")
+            res.setHeader('Content-Type', "application/json")
             res.json(promotions)
         }, (err) => next(err)).catch((err) => next(err))
     }).post((req, res, next) => {
+
         Promos.create(
             req.body
         ).then((promotion) => {
-            console.log("promotion created", promotion);
             res.statusCode = 200;
             res.setHeader("Content-Type", "application/json")
-            res.json(dish)
+            res.json(promotion)
         }, err => next(err))
-            .catch((err) =>
-                next(err))
+            .catch((err) => {
+                console.log(err);
+                next(err)
+            })
         // res.end("Will add the promotion: " + req.body.name + " with details: " + req.body.description)
     }).put((req, res, next) => {
         res.statusCode = 403

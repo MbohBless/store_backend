@@ -3,7 +3,9 @@ require('mongoose-currency').loadType(mongoose)
 const Schema = mongoose.Schema;
 const Currency = mongoose.Types.Currency
 
+
 const leaderSchema = new Schema(
+
     {
         name: {
             type: String,
@@ -17,16 +19,11 @@ const leaderSchema = new Schema(
             type: String,
             required: true
         },
-        label: {
+        abbr: {
             type: String,
-            default: "New"
+            required: true
         },
-        price: {
-            type: Currency,
-            require: true,
-            min: 0
-        },
-        description: {
+        designation: {
             type: String,
             required: true
         },
@@ -39,4 +36,4 @@ const leaderSchema = new Schema(
 );
 var Leaders = mongoose.model("Leader", leaderSchema)
 
-module.export = Leaders
+module.exports = Leaders

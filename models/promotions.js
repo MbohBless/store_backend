@@ -18,11 +18,16 @@ const promotionSchema = new Schema(
             type: String,
             required: true
         },
-        abbr: {
+        label: {
             type: String,
-            required: true
+            default: "New"
         },
-        designation: {
+        price: {
+            type: Currency,
+            require: true,
+            min: 0
+        },
+        description: {
             type: String,
             required: true
         },
@@ -35,4 +40,4 @@ const promotionSchema = new Schema(
 );
 var Promotions = mongoose.model("Promotion", promotionSchema)
 
-module.export = Promotions
+module.exports = Promotions
