@@ -1,7 +1,7 @@
 var express = require('express');
 const user = require('../models/user');
 
-var bodyParser = express.Router("body-parser")
+var bodyParser = require("body-parser")
 var router = express.Router();
 var User = require('../models/user')
 
