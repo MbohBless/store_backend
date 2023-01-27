@@ -34,30 +34,38 @@ router.post("/signup", (req, res, next) => {
   });
 })
 
-router.post('/login', (req, res) => {
-  passport.authenticate('local', function (err, user, info) {
-    if (err) {
-      console.log(err)
-      return res.status(401).json(err);
-    }
-    if (user) {
-      console.log("There has been some progress")
-      var token = authenticate.getToken({ _id: user._id })
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'application/json');
-      res.json({
-        success: true,
-        status: 'You are successfully logged in!',
-        token: token
-      });
+// router.post('/login', (req, res) => {
+//   passport.authenticate('local', function (err, user, info) {
+//     if (err) {
+//       console.log(err)
+//       return res.status(401).json(err);
+//     }
+//     if (user) {
+//       console.log("There has been some progress")
+//       var token = authenticate.getToken({ _id: user._id })
+//       res.statusCode = 200;
+//       res.setHeader('Content-Type', 'application/json');
+//       res.json({
+//         success: true,
+//         status: 'You are successfully logged in!',
+//         token: token
+//       });
 
-    } else {
-      console.log(info)
-      res.status(401).json(info);
-    }
+//     } else {
+//       console.log(info)
+//       res.status(401).json(info);
+//     }
 
-  })(req, res)
-  // next()
+//   })(req, res)
+//   // next()
+// });
+
+router.post('/login', passport.authenticate('local'), (req, res) => {
+  console.log(req)
+  var token = authenticate.getToken({ _id: req.user._id })
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'application/json');
+  res.json({ success: true, status: 'You are successfully logged in!', token: token });
 });
 
 router.get('/logout', (req, res) => {

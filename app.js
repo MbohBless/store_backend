@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const passport = require('passport')
 const config = require('./config')
 
+
 const url = config.mongoUrl
 
 const connect = mongoose.connect(url);
@@ -37,7 +38,6 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);// app.use(cookieParser('12345-67890-09876-54321'))
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 app.use('/dishes', dishRouter);
 app.use('/leaders', leaderRouter);
 app.use('/promos', promoRouter);
@@ -46,7 +46,6 @@ app.use('/promos', promoRouter);
 app.use(function (req, res, next) {
   next(createError(404));
 });
-
 // error handler
 app.use(function (err, req, res, next) {
   res.locals.message = err.message;
