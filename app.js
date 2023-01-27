@@ -45,6 +45,7 @@ app.use(session({
 
 app.use(passport.initialize())
 app.use(passport.session())
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);// app.use(cookieParser('12345-67890-09876-54321'))
 function auth(req, res, next) {
