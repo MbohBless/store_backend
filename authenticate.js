@@ -3,19 +3,19 @@ var passport = require('passport')
 var LocalStrategy = require('passport-local')
 var User = require("./models/user")
 var JwtStrategy = require('passport-jwt').Strategy;
-var ExteactJwt = require('passport-jwt').ExtractJwt;
+var ExtractJwt = require('passport-jwt').ExtractJwt;
 var jwt = require('jsonwebtoken')
 
 
 var config = require('./config');
-const { ExtractJwt } = require('passport-jwt');
 
 exports.local = passport.use(new LocalStrategy(User.authenticate()))
 passport.serializeUser(User.serializeUser())
 passport.deserializeUser(User.deserializeUser())
 
 
-exports.getToken = (user) => {
+exports.getToken = function (user) {
+    console.log("Working here already")
     return jwt.sign(user, config.secretKey,
         { expiresIn: 3600 });
 }

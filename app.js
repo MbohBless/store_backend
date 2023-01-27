@@ -3,8 +3,7 @@ const express = require('express');
 const path = require('path');
 const logger = require('morgan');
 const mongoose = require('mongoose');
-const session = require('express-session');
-const FileStore = require('session-file-store')(session)
+const cookieParser = require('cookie-parser');
 const passport = require('passport')
 const config = require('./config')
 
@@ -32,30 +31,10 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// app.use(cookieParser());
-// app.use(session({
-//   name: "session-id",
-//   secret: "12345-67890-09876-54321",
-//   saveUninitialized: false,
-//   store: new FileStore()
-// }))
-
+app.use(cookieParser());
 app.use(passport.initialize())
-// app.use(passport.session())
-
 app.use('/', indexRouter);
 app.use('/users', usersRouter);// app.use(cookieParser('12345-67890-09876-54321'))
-function auth(req, res, next) {
-  if (!req.user) {
-    var err = new Error("You are not authenticated!");
-    err.status = 401;
-    return next(err);
-  }
-  else {
-    next()
-  }
-
-}
 app.use(express.static(path.join(__dirname, 'public')));
 
 
@@ -77,4 +56,5 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
 module.exports = app;
