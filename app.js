@@ -33,8 +33,8 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(passport.initialize())
 app.use('/', indexRouter);
+app.use(passport.initialize())
 app.use('/users', usersRouter);// app.use(cookieParser('12345-67890-09876-54321'))
 app.use(express.static(path.join(__dirname, 'public')));
 
