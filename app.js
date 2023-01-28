@@ -1,12 +1,14 @@
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
-const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
-const Dishes = require('./models/dishes')
+const cookieParser = require('cookie-parser');
+const passport = require('passport')
+const config = require('./config')
 
-const url = 'mongodb://localhost:27017/confusion'
+
+const url = config.mongoUrl
 
 const connect = mongoose.connect(url);
 
@@ -21,8 +23,6 @@ const usersRouter = require('./routes/users');
 const dishRouter = require('./routes/dishRouter');
 const leaderRouter = require('./routes/leaderRouter');
 const promoRouter = require('./routes/PromoRouter');
-
-
 const app = express();
 
 // view engine setup
@@ -33,10 +33,11 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use('/', indexRouter);
+app.use(passport.initialize())
+app.use('/users', usersRouter);// app.use(cookieParser('12345-67890-09876-54321'))
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/dishes', dishRouter);
 app.use('/leaders', leaderRouter);
 app.use('/promos', promoRouter);
@@ -45,7 +46,6 @@ app.use('/promos', promoRouter);
 app.use(function (req, res, next) {
   next(createError(404));
 });
-
 // error handler
 app.use(function (err, req, res, next) {
   res.locals.message = err.message;
