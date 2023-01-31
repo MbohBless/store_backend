@@ -181,10 +181,11 @@ dishRouter.route('/:dishId/comment/:commentId')
             + req.params.commentId)
     })
     .put(authenticate.verifyUser, (req, res, next) => {
-        if (req.user._id.equals(dish.comments.id(req.params.commentId).author._id)) {
+
             Dishes.findById(req.params.dishId)
                 .then((dish) => {
                     if (dish != null && dish.comments.id(req.params.commentId) != null) {
+                        if (req.user._id.equals(dish.comments.id(req.params.commentId).author._id)) {
                         if (req.body.rating) {
                             dish.comments.id(req.params.commentId).rating = req.body.rating
                         }
@@ -201,6 +202,12 @@ dishRouter.route('/:dishId/comment/:commentId')
                                     })
 
                             }, err => next(err))
+                        }
+                        else {
+                            err = new Error("You are not the author of this comment")
+                            err.status = 403;
+                            return next(err)
+                        }
                     }
                     else if (dish == null) {
                         err = new Error("Dish" + req.params.dishId + "not found")
@@ -216,28 +223,28 @@ dishRouter.route('/:dishId/comment/:commentId')
                 .catch((err) =>
                     next(err)
                 )
-        }
-        else {
-            err = new Error("You are not the author of this comment")
-            err.status = 403;
-            return next(err)
-        }
+
 
 
     })
     .delete(authenticate.verifyUser, (req, res, next) => {
-        if (req.user._id.equals(dish.comments.id(req.params.commentId).author._id)) {
             Dishes.findById(req.params.dishId).then((dish) => {
                 if (dish != null && dish.comments.id(req.params.commentId) != null) {
+                    if (req.user._id.equals(dish.comments.id(req.params.commentId).author._id)) {
                     dish.comments.id(req.params.commentId).remove()
                     dish.save().then((dish) => {
-                        Dishes.findById(dish._id).populate('author')
+                        Dishes.findById(dish._id).populate('comments.author')
                             .then((dish) => {
                                 res.statusCode = 200;
                                 res.setHeader('Content-Type', "application/json")
                                 res.json(dish)
                             })
                     }, err => next(err));
+                    } else {
+                        err = new Error("You are not the author of this comment")
+                        err.status = 403;
+                        return next(err)
+                    }
                 }
                 else if (dish == null) {
                     err = new Error("Dish" + req.params.dishId + "not found")
@@ -249,14 +256,11 @@ dishRouter.route('/:dishId/comment/:commentId')
                     err.status = 404;
                     return next(err)
                 }
+
             })
                 .catch((err) =>
                     next(err))
-        } else {
-            err = new Error("you are not the author of this comment")
-            err.status = 403;
-            return next(err)
-        }
+
 
     })
 
