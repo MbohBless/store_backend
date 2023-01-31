@@ -11,7 +11,7 @@ promoRouter.route('/')
             res.setHeader('Content-Type', "application/json")
             res.json(promotions)
         }, (err) => next(err)).catch((err) => next(err))
-    }).post(authenticate.verifyUser, (req, res, next) => {
+    }).post(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
         Promos.create(
             req.body
         ).then((promotion) => {
@@ -24,10 +24,10 @@ promoRouter.route('/')
                 next(err)
             })
         // res.end("Will add the promotion: " + req.body.name + " with details: " + req.body.description)
-    }).put(authenticate.verifyUser, (req, res, next) => {
+    }).put(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
         res.statusCode = 403
         res.end("put operation not supported on /Promotions")
-    }).delete(authenticate.verifyUser, (req, res, next) => {
+    }).delete(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
         Promos.remove({}).then((resp) => {
             res.statusCode = 200
             res.setHeader('Content-Type', "application/json")
@@ -42,11 +42,11 @@ promoRouter.route('/:promoId').get((req, res, next) => {
             res.setHeader("Content-Type", "application/json")
         }, err => next(err)).catch(err => next(err))
 })
-    .post(authenticate.verifyUser, (req, res, next) => {
+    .post(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
         res.statusCode = 403;
         res.end("POST operation not supported on /Promos/" + req.params.promoId)
     })
-    .put(authenticate.verifyUser, (req, res, next) => {
+    .put(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
         Promos.findByIdAndUpdate(req.params.promoId, {
             $set: req.body
         }, { new: true })
@@ -57,7 +57,7 @@ promoRouter.route('/:promoId').get((req, res, next) => {
             }
                 , err => next(err)).catch(err => next(err))
     })
-    .delete(authenticate.verifyUser, (req, res, next) => {
+    .delete(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
         Promos.findByIdAndDelete(req.params.promoId).then((resp) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', "application/json")
