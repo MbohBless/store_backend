@@ -11,7 +11,7 @@ var authenticate = require('../authenticate')
 router.use(bodyParser.json())
 /* GET users listing. */
 
-router.route("/").get(authenticate.verifyAdmin, (req, res, next) => {
+router.route("/").get(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
   User.find({}).then((users) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
