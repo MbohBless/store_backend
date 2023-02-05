@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const passport = require('passport')
 const config = require('./config')
+require('dotenv').config()
 
 
 const url = config.mongoUrl
